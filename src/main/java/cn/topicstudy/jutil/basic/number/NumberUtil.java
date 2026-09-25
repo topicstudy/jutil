@@ -2,6 +2,7 @@ package cn.topicstudy.jutil.basic.number;
 
 import cn.topicstudy.jutil.basic.text.StringUtil;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,7 +66,8 @@ public class NumberUtil {
 
         // 判断是否超出范围
         if (intSegment.length() > supportIntLength) throw new RuntimeException("最大可转换千亿,即整数部分12位");
-        if (!isInt && decimalSegment.length() > supportDecimalLength) throw new RuntimeException("最小可转换分，即小数部分2位");
+        if (!isInt && decimalSegment.length() > supportDecimalLength)
+            throw new RuntimeException("最小可转换分，即小数部分2位");
 
         // 整数部分转大写
         for (int i = 0; i < intSegment.length(); i++) {
@@ -95,11 +97,32 @@ public class NumberUtil {
             } else if (decimalSegment.length() == 2) {
                 String n1 = decimalSegment.charAt(0) + "";
                 String n2 = decimalSegment.charAt(1) + "";
-                decimalRes = ("0".equals(n1) ? "零" : uppercaseMap.get(n1) + "角")
-                        + ("0".equals(n2) ? "" : uppercaseMap.get(n2) + "分");
+                decimalRes = ("0".equals(n1) ? "零" : uppercaseMap.get(n1) + "角") + ("0".equals(n2) ? "" : uppercaseMap.get(n2) + "分");
             }
         }
 
         return isInt ? "人民币" + intRes + "整" : "人民币" + intRes + decimalRes;
+    }
+
+
+    public static String formatIntegerWithSuffix(Integer a) {
+        if (a == null) {
+            return "";
+        } else if (a < 1000) {
+            return a.toString();
+        } else if (a < 100_0000) {
+            return keepOne(a / 1000.0) + "K";
+        } else {
+            return keepOne(a / 100_0000.0) + "M";
+        }
+    }
+
+    private static String keepOne(double a) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.0");
+        String s = decimalFormat.format(a);
+        if (s.endsWith(".0")) {
+            return s.substring(0, s.indexOf(".0"));
+        }
+        return s;
     }
 }

@@ -1,8 +1,13 @@
 package cn.topicstudy.jutil.basic.file;
 
 import cn.topicstudy.jutil.basic.text.StringUtil;
+import com.alibaba.fastjson.JSON;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * 文件、文件夹工具类
@@ -135,7 +140,36 @@ public class FileUtil {
             is.read(bytes);
             return bytes;
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<String> readLines(String absolutePath) {
+        try {
+            Path path = Paths.get(absolutePath);
+            return Files.readAllLines(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T readJSONObj(String absolutePath, Class<T> cls) {
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(absolutePath));
+            String s = new String(bytes);
+            return JSON.parseObject(s, cls);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> List<T> readJSONArray(String absolutePath, Class<T> cls) {
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(absolutePath));
+            String s = new String(bytes);
+            return JSON.parseArray(s, cls);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

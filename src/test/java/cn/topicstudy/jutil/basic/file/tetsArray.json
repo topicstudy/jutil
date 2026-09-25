@@ -1,0 +1,17 @@
+[
+  {
+    "name": "WuYiFan",
+    "country": "CHN",
+    "great": true
+  },
+  {
+    "name": "XuJiaYin",
+    "country": "CHN",
+    "great": true
+  },
+  {
+    "name": "LeiJun",
+    "country": "CHN",
+    "great": false
+  }
+]

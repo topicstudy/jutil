@@ -2,6 +2,9 @@ package cn.topicstudy.jutil.basic.date;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class DateUtil {
@@ -18,6 +21,9 @@ public class DateUtil {
 
 
     /**
+     * Please use  LocalDateTime parse = LocalDateTime.parse(s, formatter);
+     * LocalDate parse1 = LocalDate.parse(s, formatter);
+     * LocalTime parse2 = LocalTime.parse(s, formatter);
      * 字符串转日期
      * 不报错，但是转换结果不正确
      * new SimpleDateFormat("yyyyMMdd").parse("2021-02-25");
@@ -28,6 +34,7 @@ public class DateUtil {
      * 报错
      * new SimpleDateFormat("yyyyMMdd").parse("2021#02#25");
      */
+    @Deprecated
     public static Date stringToDate(String s, String mask) {
         try {
             if (mask.contains("-") ^ s.contains("-")) {
@@ -40,6 +47,17 @@ public class DateUtil {
         }
     }
 
+    /**
+     * Please use DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mask);
+     * String s = LocalDateTime.now().format(formatter);
+     * String s1 = LocalDate.now().format(formatter);
+     * String s2 = LocalTime.now().format(formatter);
+     *
+     * @param d
+     * @param mask
+     * @return
+     */
+    @Deprecated
     public static String dateToString(Date d, String mask) {
         SimpleDateFormat sdf = new SimpleDateFormat(mask);
         return sdf.format(d);
@@ -49,6 +67,7 @@ public class DateUtil {
      * 给date加上seconds秒
      * TODO fix:超过int范围
      */
+    @Deprecated
     public static Date addSeconds(Date date, long seconds) {
         return new Date(date.getTime() + seconds * 1000);
     }
@@ -56,6 +75,7 @@ public class DateUtil {
     /**
      * 获取日期中的年
      */
+    @Deprecated
     public static Integer getYear(Date d) {
         return d.getYear() + 1900;
     }
@@ -63,6 +83,7 @@ public class DateUtil {
     /**
      * 获取日期中的月
      */
+    @Deprecated
     public static Integer getMonth(Date d) {
         return d.getMonth() + 1;
     }
@@ -70,6 +91,7 @@ public class DateUtil {
     /**
      * 获取日期中的日
      */
+    @Deprecated
     public static Integer getDay(Date d) {
         return d.getDate();
     }
@@ -77,6 +99,7 @@ public class DateUtil {
     /**
      * 当前时间
      */
+    @Deprecated
     public static Date nowDate() {
         return new Date();
     }
@@ -87,7 +110,37 @@ public class DateUtil {
      * @param mask
      * @return String
      */
+    @Deprecated
     public static String nowDateString(String mask) {
         return dateToString(nowDate(), mask);
+    }
+
+
+    public static String calculateTimeDifference(LocalDateTime start, LocalDateTime end) {
+        Period period = Period.between(start.toLocalDate(), end.toLocalDate());
+
+        long days = ChronoUnit.DAYS.between(start.toLocalDate().plus(period), end.toLocalDate());
+        start = start.plus(period).plusDays(days);
+
+        long hours = ChronoUnit.HOURS.between(start, end);
+        start = start.plusHours(hours);
+
+        long minutes = ChronoUnit.MINUTES.between(start, end);
+        start = start.plusMinutes(minutes);
+
+        long seconds = ChronoUnit.SECONDS.between(start, end);
+        start = start.plusSeconds(seconds);
+
+        long millis = ChronoUnit.MILLIS.between(start, end);
+
+        return String.format("%d年%d个月%d天%d小时%d分%d秒%d毫秒",
+                period.getYears(), period.getMonths(), days, hours, minutes, seconds, millis);
+    }
+
+    public static void main(String[] args) {
+        LocalDateTime startTime = LocalDateTime.of(2020, 5, 17, 0, 30, 20, 500);
+        LocalDateTime endTime = LocalDateTime.now();
+
+        System.out.println(calculateTimeDifference(startTime, endTime));
     }
 }

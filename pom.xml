@@ -7,7 +7,7 @@
     <!--required by sonatype start-->
     <groupId>io.github.topicstudy</groupId>
     <artifactId>jutil</artifactId>
-    <version>3.5.0</version>
+    <version>3.6.0</version>
     <description>java util set</description>
     <name>io.github.topicstudy:jutil</name>
     <packaging>jar</packaging>

@@ -7,4 +7,5 @@ public class ObjectUtil {
         if (v instanceof String) return StringUtil.isBlank((String) v);
         return v == null;
     }
+
 }

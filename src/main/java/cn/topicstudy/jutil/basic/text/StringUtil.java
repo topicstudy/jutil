@@ -1,6 +1,7 @@
 package cn.topicstudy.jutil.basic.text;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
@@ -152,6 +153,7 @@ public class StringUtil {
 
     /**
      * 场景：捕获异常的地方打日志时为了防止JSON异常
+     *
      * @param o
      * @return
      */
@@ -165,4 +167,25 @@ public class StringUtil {
             return o.toString();
         }
     }
+
+    /**
+     * @param s            e.g. name:w,age:1
+     * @param kVSplitter   e.g. :
+     * @param pairSplitter e.g. ,
+     */
+    public static <T> T parseObjectString(String s, String kVSplitter, String pairSplitter, Class<T> cls) {
+        if (StringUtil.isBlank(s)) {
+            return null;
+        }
+        JSONObject jo = new JSONObject();
+        String[] pairs = s.split(pairSplitter);
+        for (String pair : pairs) {
+            String[] kv = pair.split(kVSplitter);
+            jo.put(kv[0], kv[1]);
+        }
+
+        return JSONObject.parseObject(jo.toJSONString(), cls);
+    }
+
+
 }
